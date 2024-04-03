@@ -1,0 +1,14 @@
+{
+  "extends": "eslint:recommended",
+  "env": {
+    "node": true,
+    "jest": true,
+    "es2024": true
+  },
+  "overrides": [{
+    "files": ["./**/*.mjs"],
+    "parserOptions": {
+      "sourceType": "module"
+    }
+  }]
+}

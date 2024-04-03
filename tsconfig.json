@@ -1,0 +1,10 @@
+{
+  "include": ["./src/eyeson-node-layer.js"],
+  "exclude": ["./src/**/*.test.js", "__mocks__", "node_modules"],
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outFile": "./eyeson-node-layer.d.ts",
+  }
+}
