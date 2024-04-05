@@ -77,9 +77,10 @@ await layer.writeFile('./preview.png')
 Here's a list of all EyesonLayer methods:
 
 ```ts
-// Register font file with name
+// Register font file with name or Buffer
 EyesonLayer.registerFont('./OpenSans.ttf', 'OpenSans'): boolean
 const layer = new EyesonLayer({ widescreen: true }): EyesonLayer
+layer.width, layer.height
 const metrics = layer.measureText('text', 'bold 16px OpenSans'): TextMetrics
 layer.createLinearGradient(x1, y1, x2, y2): CanvasGradient
 layer.createRadialGradient(x1, y1, r1, x2, y2, r2): CanvasGradient
@@ -88,37 +89,39 @@ layer.createConicGradient(startAngle, x, y): CanvasGradient
 layer.startShadow(blur, offsetX, offsetY, color): LayerObject
 // End shadow, continue without shadow
 layer.endShadow(): LayerObject
-// add text
+// Add text
 layer.addText(text, font, color, x, y, maxWidth = null): LayerObject
-// add multiline text that breaks at the given width and prevent overflow on given height
+// Add multiline text that breaks at the given width and prevent overflow on given height
 layer.addMultilineText(text, font, color, x, y, width, height, lineHeight, textAlign = 'left'): LayerObject
-// add image. path can be local or URL. set width and height to resize the image
-await layer.addImage(path, x, y, width = null, height = null): Promise<LayerObject>
-// add filled rectangle with border radius
+// Load image from path, URL, or Buffer to use with addImage
+const image = await layer.loadImage(source)
+// Add an image. "source" can be local path, URL, Buffer, or Image. Set width and height to resize the image
+await layer.addImage(source, x, y, width = null, height = null): Promise<LayerObject>
+// Add filled rectangle with border radius
 layer.addRect(x, y, width, height, radius = 0, color): LayerObject
-// add stroked rectangle with border radius
+// Add stroked rectangle with border radius
 layer.addRectOutline(x, y, width, height, lineWidth = 1, radius = 0, color): LayerObject
-// add filled circle
+// Add filled circle
 layer.addCircle(x, y, radius, color): LayerObject
-// add stroked circle
+// Add stroked circle
 layer.addCircleOutline(x, y, radius, lineWidth = 1, color): LayerObject
-// add line
+// Add line
 layer.addLine(x1, y1, x2, y2, lineWidth = 1, color): LayerObject
-// add a filled polygon. points are alternating x, y coordinates
+// Add a filled polygon. points are alternating x, y coordinates
 layer.addPolygon(color, ...points): LayerObject
-// add a stroked polygon. points are alternating x, y coordinates
+// Add a stroked polygon. points are alternating x, y coordinates
 layer.addPolygonOutline(color, lineWidth = 1, ...points): LayerObject
-// add text with a filled background box
+// Add text with a filled background box
 layer.addTextBox(text, font, fontColor, x, y, origin = 'top left', padding = 0, maxWidth = null, radius = 0, color): LayerObject
-// add text with a stroked box
+// Add text with a stroked box
 layer.addTextBoxOutline(text, font, fontColor, x, y, origin = 'top left', padding = 0, maxWidth = null, radius = 0, lineWidth = 1, color): LayerObject
-// add a filled box with multiline text that breaks at the given width and prevent overflow on given height
+// Add a filled box with multiline text that breaks at the given width and prevent overflow on given height
 layer.addMultilineTextBox(text, font, fontColor, x, y, width, height, padding = 0, lineHeight, radius = 0, color, textAlign = 'left'): LayerObject
-// add a stroked box with multiline text
+// Add a stroked box with multiline text
 layer.addMultilineTextBoxOutline(text, font, fontColor, x, y, width, height, padding = 0, lineHeight, radius = 0, lineWidth = 1, color, textAlign = 'left'): LayerObject
-// draw canvas and create the image buffer
+// Draw canvas and create the image buffer
 layer.createBuffer(): Buffer
-// draw canvas and write to local file
+// Draw canvas and write to local file
 await layer.writeFile(path: String): Promise<void>
 ```
 

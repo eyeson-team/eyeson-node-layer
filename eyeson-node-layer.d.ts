@@ -41,13 +41,19 @@ declare module "eyeson-node-layer" {
         /** @type {canvas.SKRSContext2D} */
         _ctx: canvas.SKRSContext2D;
         /**
-         * measure text
+         * Measure text
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/measureText
          * @param {string} text
          * @param {string} font - E.g. '16px Arial, sans-serif'
          * @returns {TextMetrics}
          */
         measureText(text: string, font: string): TextMetrics;
+        /**
+         * Load image from path, URL, or Buffer to use with addImage
+         * @param {string|URL|Buffer|ArrayBufferLike|Uint8Array|canvas.Image|import('stream').Readable} source
+         * @returns {Promise<canvas.Image>}
+         */
+        loadImage(source: string | URL | Buffer | ArrayBufferLike | Uint8Array | canvas.Image | import('stream').Readable): Promise<canvas.Image>;
         /**
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient
          * @param {number} x1
@@ -100,7 +106,7 @@ declare module "eyeson-node-layer" {
             type: 'end-shadow';
         };
         /**
-         * add text to canvas
+         * Add text to canvas
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillText
          * @param {string} text
          * @param {string} font - E.g. '16px Arial, sans-serif'
@@ -120,7 +126,7 @@ declare module "eyeson-node-layer" {
             maxWidth: number | null;
         };
         /**
-         * add multiline text to canvas
+         * Add multiline text to canvas
          * @param {string} text
          * @param {string} font - E.g. '16px Arial, sans-serif'
          * @param {string|CanvasGradient} color - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
@@ -145,15 +151,15 @@ declare module "eyeson-node-layer" {
             textAlign: TextAlign;
         };
         /**
-         * add image to canvas
-         * @param {string} path - URL or path of image file
+         * Add image to canvas
+         * @param {string|URL|Buffer|ArrayBufferLike|Uint8Array|canvas.Image|import('stream').Readable} source - URL or path of image file
          * @param {number} x
          * @param {number} y
          * @param {number|null} [width] - width of image if null
          * @param {number|null} [height] - height of image if null
          * @returns {Promise<{ type: 'image', image: canvas.Image, x: number, y: number, width: number|null, height: number|null }>}
          */
-        addImage(path: string, x: number, y: number, width?: number | null, height?: number | null): Promise<{
+        addImage(source: string | URL | Buffer | ArrayBufferLike | Uint8Array | canvas.Image | import('stream').Readable, x: number, y: number, width?: number | null, height?: number | null): Promise<{
             type: 'image';
             image: canvas.Image;
             x: number;
@@ -162,7 +168,7 @@ declare module "eyeson-node-layer" {
             height: number | null;
         }>;
         /**
-         * add a filled rectangle to canvas
+         * Add a filled rectangle to canvas
          * @param {number} x
          * @param {number} y
          * @param {number} width
@@ -181,7 +187,7 @@ declare module "eyeson-node-layer" {
             color: string | CanvasGradient;
         };
         /**
-         * add a stroked rectangle to canvas
+         * Add a stroked rectangle to canvas
          * @param {number} x
          * @param {number} y
          * @param {number} width
@@ -202,7 +208,7 @@ declare module "eyeson-node-layer" {
             color: string | CanvasGradient;
         };
         /**
-         * add a filled circle
+         * Add a filled circle
          * @param {number} x
          * @param {number} y
          * @param {number} radius
@@ -217,7 +223,7 @@ declare module "eyeson-node-layer" {
             color: string | CanvasGradient;
         };
         /**
-         * add a stroked circle
+         * Add a stroked circle
          * @param {number} x
          * @param {number} y
          * @param {number} radius
@@ -234,7 +240,7 @@ declare module "eyeson-node-layer" {
             color: string | CanvasGradient;
         };
         /**
-         * add a line
+         * Add a line
          * @param {number} x1
          * @param {number} y1
          * @param {number} x2
@@ -253,7 +259,7 @@ declare module "eyeson-node-layer" {
             color: string | CanvasGradient;
         };
         /**
-         * add a filled polygon
+         * Add a filled polygon
          * @param {string|CanvasGradient} color - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
          * @param  {...number} points - a sequence of x, y point coordinates. minimum 3 points
          * @returns {{ type: 'polygon', color: string|CanvasGradient, points: Array<number> }}
@@ -264,7 +270,7 @@ declare module "eyeson-node-layer" {
             points: Array<number>;
         };
         /**
-         * add a stroked polygon
+         * Add a stroked polygon
          * @param {string|CanvasGradient} color - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
          * @param {number} lineWidth - default 1
          * @param  {...number} points - a sequence of x, y point coordinates. minimum 3 points
@@ -277,7 +283,7 @@ declare module "eyeson-node-layer" {
             points: Array<number>;
         };
         /**
-         * add a text on a filled box
+         * Add a text on a filled box
          * @param {string} text
          * @param {string} font - E.g. '16px Arial, sans-serif'
          * @param {string|CanvasGradient} fontColor - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
@@ -304,7 +310,7 @@ declare module "eyeson-node-layer" {
             color: string | CanvasGradient;
         };
         /**
-         * add a text on a stroked box
+         * Add a text on a stroked box
          * @param {string} text
          * @param {string} font - E.g. '16px Arial, sans-serif'
          * @param {string|CanvasGradient} fontColor - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
@@ -333,7 +339,7 @@ declare module "eyeson-node-layer" {
             color: string | CanvasGradient;
         };
         /**
-         * add a filled rectangle with non-exeeding multiline text
+         * Add a filled rectangle with non-exeeding multiline text
          * @param {string} text
          * @param {string} font - E.g. '16px Arial, sans-serif'
          * @param {string|CanvasGradient} fontColor - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
@@ -364,7 +370,7 @@ declare module "eyeson-node-layer" {
             textAlign: TextAlign;
         };
         /**
-         * add a stroked rectangle with non-exeeding multiline text
+         * Add a stroked rectangle with non-exeeding multiline text
          * @param {string} text
          * @param {string} font - E.g. '16px Arial, sans-serif'
          * @param {string|CanvasGradient} fontColor - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
@@ -414,11 +420,11 @@ declare module "eyeson-node-layer" {
     import canvas = require("@napi-rs/canvas");
     /**
      * Register font by file path and font name
-     * @param {string} path - path to font file
-     * @param {string} name - name of font
+     * @param {string|Buffer} source - path to font file
+     * @param {string} nameAlias - name of font
      * @returns {boolean}
      */
-    function registerFont(path: string, name: string): boolean;
+    function registerFont(source: string | Buffer, nameAlias: string): boolean;
     type TextAlign = 'left' | 'center' | 'right' | 'start' | 'end';
     type BoxOrigin = 'top left' | 'top center' | 'top right' | 'center left' | 'center' | 'center right' | 'bottom left' | 'bottom center' | 'bottom right';
 }
