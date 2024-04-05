@@ -1,6 +1,6 @@
 {
   "name": "eyeson-node-layer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create Layer and use with eyeson-node",
   "main": "./src/eyeson-node-layer.js",
   "module": "./src/eyeson-node-layer.mjs",
@@ -30,7 +30,6 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.51",
-    "eyeson-node": "^1.2.0"
+    "@napi-rs/canvas": "^0.1.51"
   }
 }

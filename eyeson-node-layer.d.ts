@@ -34,6 +34,8 @@ declare module "eyeson-node-layer" {
         _objects: ({
             type: string;
         } & Record<string, any>)[];
+        width: number;
+        height: number;
         /** @type {canvas.Canvas} */
         _canvas: canvas.Canvas;
         /** @type {canvas.SKRSContext2D} */

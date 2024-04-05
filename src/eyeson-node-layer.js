@@ -26,8 +26,10 @@ class EyesonLayer {
     this.options = options
     /** @type {Array<LayerObject & Record<string,any>>} */
     this._objects = []
+    this.width = 1280
+    this.height = options.widescreen ? 720 : 960
     /** @type {canvas.Canvas} */
-    this._canvas = canvas.createCanvas(1280, options.widescreen ? 720 : 960)
+    this._canvas = canvas.createCanvas(this.width, this.height)
     /** @type {canvas.SKRSContext2D} */
     this._ctx = this._canvas.getContext('2d')
     this._ctx.textAlign = 'left'
