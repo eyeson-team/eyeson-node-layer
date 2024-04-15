@@ -119,6 +119,8 @@ layer.addTextBoxOutline(text, font, fontColor, x, y, origin = 'top left', paddin
 layer.addMultilineTextBox(text, font, fontColor, x, y, width, height, padding = 0, lineHeight, radius = 0, color, textAlign = 'left'): LayerObject
 // Add a stroked box with multiline text
 layer.addMultilineTextBoxOutline(text, font, fontColor, x, y, width, height, padding = 0, lineHeight, radius = 0, lineWidth = 1, color, textAlign = 'left'): LayerObject
+// Clear layer objects to re-use a clean canvas
+layer.clear()
 // Draw canvas and create the image buffer
 layer.createBuffer(): Buffer
 // Draw canvas and write to local file

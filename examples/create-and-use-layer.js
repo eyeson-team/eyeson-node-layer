@@ -22,7 +22,7 @@ const run = async () => {
 
     const gradient = overlay.createLinearGradient(0, 400, 0, 600)
     gradient.addColorStop(0, '#777')
-    gradient.addColorStop(200, '#555')
+    gradient.addColorStop(1, '#555')
 
     overlay.startShadow(7, 2, 2, '#555')
     overlay.addMultilineTextBox('Agenda:\n \n- Test Eyeson\n- Try Layer', font, fontColor, 700, 400, 240, 200, 20, 22, 4, gradient, 'center')

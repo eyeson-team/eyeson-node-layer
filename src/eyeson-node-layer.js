@@ -351,6 +351,12 @@ class EyesonLayer {
     return entry
   }
   /**
+   * Clear layer objects to re-use a clean canvas
+   */
+  clear() {
+    this._objects.length = 0;
+  }
+  /**
    * Draw on canvas and return Buffer
    * @returns {Buffer}
    */
