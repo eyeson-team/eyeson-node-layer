@@ -358,9 +358,11 @@ class EyesonLayer {
   }
   /**
    * Draw on canvas and return Buffer
+   * @param {'image/png'|'image/jpeg'|'image/webp'} [type] - default image/png
+   * @param {number} [quality] - default 1
    * @returns {Buffer}
    */
-  createBuffer() {
+  createBuffer(type = 'image/png', quality = 1) {
     const { _canvas, _ctx } = this
     _ctx.clearRect(0, 0, _canvas.width, _canvas.height)
     this._objects.forEach(entry => {
@@ -531,15 +533,17 @@ class EyesonLayer {
         _ctx.shadowOffsetY = 0
       }
     })
-    return _canvas.toBuffer('image/png')
+    return _canvas.toBuffer(type, quality)
   }
   /**
    * Write canvas to image file for testing
    * @param {string} path - write file destination path
+   * @param {'image/png'|'image/jpeg'|'image/webp'} [type] - default image/png
+   * @param {number} [quality] - default 1
    * @returns {Promise}
    */
-  async writeFile(path) {
-    const buffer = this.createBuffer()
+  async writeFile(path, type, quality) {
+    const buffer = this.createBuffer(type, quality)
     await fsPromise.writeFile(path, buffer)
   }
 }

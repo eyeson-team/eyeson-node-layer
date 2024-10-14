@@ -122,9 +122,9 @@ layer.addMultilineTextBoxOutline(text, font, fontColor, x, y, width, height, pad
 // Clear layer objects to re-use a clean canvas
 layer.clear()
 // Draw canvas and create the image buffer
-layer.createBuffer(): Buffer
+layer.createBuffer(type = 'image/png', quality = 1): Buffer
 // Draw canvas and write to local file
-await layer.writeFile(path: String): Promise<void>
+await layer.writeFile(path: String, type = 'image/png', quality = 1): Promise<void>
 ```
 
 For all methods, `color`, or `fontColor` can be CSS color value, e.g. '#000' or
@@ -141,6 +141,9 @@ For all methods, `color`, or `fontColor` can be CSS color value, e.g. '#000' or
 All number values are in pixels.
 
 The `LayerObject` is just an object containing `type` and all its settings. It's great for further delta updates.
+
+Supported types are `image/png`, `image/jpeg`, and `image/webp`.
+WebP and JPG support compression that can be set as quality between 0 and 1.
 
 ```js
 const user = eyeson.join(...)
@@ -163,4 +166,8 @@ $ npm run build
 
 ## Releases
 
+- 1.2.1 createBuffer image type and quality
+- 1.2.0 add clear layer
+- 1.1.0 add loadImage
+- 1.0.1 add width and height
 - 1.0.0 Initial release
