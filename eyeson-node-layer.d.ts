@@ -31,9 +31,9 @@ declare module "eyeson-node-layer" {
             widescreen?: boolean;
         };
         /** @type {Array<LayerObject & Record<string,any>>} */
-        _objects: ({
+        _objects: Array<{
             type: string;
-        } & Record<string, any>)[];
+        } & Record<string, any>>;
         width: number;
         height: number;
         /** @type {canvas.Canvas} */
@@ -53,7 +53,7 @@ declare module "eyeson-node-layer" {
          * @param {string|URL|Buffer|ArrayBufferLike|Uint8Array|canvas.Image|import('stream').Readable} source
          * @returns {Promise<canvas.Image>}
          */
-        loadImage(source: string | URL | Buffer | ArrayBufferLike | Uint8Array | canvas.Image | import('stream').Readable): Promise<canvas.Image>;
+        loadImage(source: string | URL | Buffer | ArrayBufferLike | Uint8Array | canvas.Image | import("stream").Readable): Promise<canvas.Image>;
         /**
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient
          * @param {number} x1
@@ -92,7 +92,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'start-shadow', blur: number, offsetX: number, offsetY: number, color: string }}
          */
         startShadow(blur: number, offsetX: number, offsetY: number, color: string): {
-            type: 'start-shadow';
+            type: "start-shadow";
             blur: number;
             offsetX: number;
             offsetY: number;
@@ -103,7 +103,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'end-shadow' }}
          */
         endShadow(): {
-            type: 'end-shadow';
+            type: "end-shadow";
         };
         /**
          * Add text to canvas
@@ -117,7 +117,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'text', text: string, font: string, color: string|CanvasGradient, x: number, y: number, maxWidth: number|null }}
          */
         addText(text: string, font: string, color: string | CanvasGradient, x: number, y: number, maxWidth?: number | null): {
-            type: 'text';
+            type: "text";
             text: string;
             font: string;
             color: string | CanvasGradient;
@@ -139,7 +139,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'multiline', text: string, font: string, color: string|CanvasGradient, x: number, y: number, width: number, height: number, lineHeight: number, textAlign: TextAlign }}
          */
         addMultilineText(text: string, font: string, color: string | CanvasGradient, x: number, y: number, width: number, height: number, lineHeight: number, textAlign?: TextAlign): {
-            type: 'multiline';
+            type: "multiline";
             text: string;
             font: string;
             color: string | CanvasGradient;
@@ -159,8 +159,8 @@ declare module "eyeson-node-layer" {
          * @param {number|null} [height] - height of image if null
          * @returns {Promise<{ type: 'image', image: canvas.Image, x: number, y: number, width: number|null, height: number|null }>}
          */
-        addImage(source: string | URL | Buffer | ArrayBufferLike | Uint8Array | canvas.Image | import('stream').Readable, x: number, y: number, width?: number | null, height?: number | null): Promise<{
-            type: 'image';
+        addImage(source: string | URL | Buffer | ArrayBufferLike | Uint8Array | canvas.Image | import("stream").Readable, x: number, y: number, width?: number | null, height?: number | null): Promise<{
+            type: "image";
             image: canvas.Image;
             x: number;
             y: number;
@@ -178,7 +178,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'rect', x: number, y: number, width: number, height: number, radius: number, color: string|CanvasGradient }}
          */
         addRect(x: number, y: number, width: number, height: number, radius: number, color: string | CanvasGradient): {
-            type: 'rect';
+            type: "rect";
             x: number;
             y: number;
             width: number;
@@ -198,7 +198,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'rect-outline', x: number, y: number, width: number, height: number, lineWidth: number, radius: number, color: string|CanvasGradient }}
          */
         addRectOutline(x: number, y: number, width: number, height: number, lineWidth: number, radius: number, color: string | CanvasGradient): {
-            type: 'rect-outline';
+            type: "rect-outline";
             x: number;
             y: number;
             width: number;
@@ -216,7 +216,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'circle', x: number, y: number, radius: number, color: string|CanvasGradient }}
          */
         addCircle(x: number, y: number, radius: number, color: string | CanvasGradient): {
-            type: 'circle';
+            type: "circle";
             x: number;
             y: number;
             radius: number;
@@ -232,7 +232,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'circle-outline', x: number, y: number, radius: number, lineWidth: number, color: string|CanvasGradient }}
          */
         addCircleOutline(x: number, y: number, radius: number, lineWidth: number, color: string | CanvasGradient): {
-            type: 'circle-outline';
+            type: "circle-outline";
             x: number;
             y: number;
             radius: number;
@@ -250,7 +250,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'line', x1: number, y1: number, x2: number, y2: number, lineWidth: number, color: string|CanvasGradient }}
          */
         addLine(x1: number, y1: number, x2: number, y2: number, lineWidth: number, color: string | CanvasGradient): {
-            type: 'line';
+            type: "line";
             x1: number;
             y1: number;
             x2: number;
@@ -265,7 +265,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'polygon', color: string|CanvasGradient, points: Array<number> }}
          */
         addPolygon(color: string | CanvasGradient, ...points: number[]): {
-            type: 'polygon';
+            type: "polygon";
             color: string | CanvasGradient;
             points: Array<number>;
         };
@@ -277,7 +277,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'polygon-outline', color: string|CanvasGradient, lineWidth: number, points: Array<number> }}
          */
         addPolygonOutline(color: string | CanvasGradient, lineWidth?: number, ...points: number[]): {
-            type: 'polygon-outline';
+            type: "polygon-outline";
             color: string | CanvasGradient;
             lineWidth: number;
             points: Array<number>;
@@ -297,7 +297,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'text-box', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, origin: BoxOrigin, padding: number|Array<number>, maxWidth: number|null, radius: number, color: string|CanvasGradient }}
          */
         addTextBox(text: string, font: string, fontColor: string | CanvasGradient, x: number, y: number, origin: BoxOrigin, padding: number | Array<number>, maxWidth: number | null, radius: number, color: string | CanvasGradient): {
-            type: 'text-box';
+            type: "text-box";
             text: string;
             font: string;
             fontColor: string | CanvasGradient;
@@ -325,7 +325,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'text-box-outline', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, origin: BoxOrigin, padding: number|Array<number>, maxWidth: number|null, radius: number, lineWidth: number, color: string|CanvasGradient }}
          */
         addTextBoxOutline(text: string, font: string, fontColor: string | CanvasGradient, x: number, y: number, origin: BoxOrigin, padding: number | Array<number>, maxWidth: number | null, radius: number, lineWidth: number, color: string | CanvasGradient): {
-            type: 'text-box-outline';
+            type: "text-box-outline";
             text: string;
             font: string;
             fontColor: string | CanvasGradient;
@@ -355,7 +355,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'multiline-box', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, width: number, height: number, padding: number|Array<number>, lineHeight: number, radius: number, color: string|CanvasGradient, textAlign: TextAlign }}
          */
         addMultilineTextBox(text: string, font: string, fontColor: string | CanvasGradient, x: number, y: number, width: number, height: number, padding: number | Array<number>, lineHeight: number, radius: number, color: string | CanvasGradient, textAlign?: TextAlign): {
-            type: 'multiline-box';
+            type: "multiline-box";
             text: string;
             font: string;
             fontColor: string | CanvasGradient;
@@ -387,7 +387,7 @@ declare module "eyeson-node-layer" {
          * @returns {{ type: 'multiline-box-outline', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, width: number, height: number, padding: number|Array<number>, lineHeight: number, radius: number, lineWidth: number, color: string|CanvasGradient, textAlign: TextAlign }}
          */
         addMultilineTextBoxOutline(text: string, font: string, fontColor: string | CanvasGradient, x: number, y: number, width: number, height: number, padding: number | Array<number>, lineHeight: number, radius: number, lineWidth: number, color: string | CanvasGradient, textAlign?: TextAlign): {
-            type: 'multiline-box-outline';
+            type: "multiline-box-outline";
             text: string;
             font: string;
             fontColor: string | CanvasGradient;
@@ -403,16 +403,24 @@ declare module "eyeson-node-layer" {
             textAlign: TextAlign;
         };
         /**
+         * Clear layer objects to re-use a clean canvas
+         */
+        clear(): void;
+        /**
          * Draw on canvas and return Buffer
+         * @param {'image/png'|'image/jpeg'|'image/webp'} [type] - default image/png
+         * @param {number} [quality] - default 1
          * @returns {Buffer}
          */
-        createBuffer(): Buffer;
+        createBuffer(type?: "image/png" | "image/jpeg" | "image/webp", quality?: number): Buffer;
         /**
          * Write canvas to image file for testing
          * @param {string} path - write file destination path
+         * @param {'image/png'|'image/jpeg'|'image/webp'} [type] - default image/png
+         * @param {number} [quality] - default 1
          * @returns {Promise}
          */
-        writeFile(path: string): Promise<any>;
+        writeFile(path: string, type?: "image/png" | "image/jpeg" | "image/webp", quality?: number): Promise<any>;
     }
     namespace EyesonLayer {
         export { registerFont, TextAlign, BoxOrigin };
@@ -425,6 +433,6 @@ declare module "eyeson-node-layer" {
      * @returns {boolean}
      */
     function registerFont(source: string | Buffer, nameAlias: string): boolean;
-    type TextAlign = 'left' | 'center' | 'right' | 'start' | 'end';
-    type BoxOrigin = 'top left' | 'top center' | 'top right' | 'center left' | 'center' | 'center right' | 'bottom left' | 'bottom center' | 'bottom right';
+    type TextAlign = "left" | "center" | "right" | "start" | "end";
+    type BoxOrigin = "top left" | "top center" | "top right" | "center left" | "center" | "center right" | "bottom left" | "bottom center" | "bottom right";
 }

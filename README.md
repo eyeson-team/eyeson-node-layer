@@ -166,6 +166,7 @@ $ npm run build
 
 ## Releases
 
+- 1.2.2 update type declarations
 - 1.2.1 createBuffer image type and quality
 - 1.2.0 add clear layer
 - 1.1.0 add loadImage

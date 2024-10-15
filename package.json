@@ -1,6 +1,6 @@
 {
   "name": "eyeson-node-layer",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Create Layer and use with eyeson-node",
   "main": "./src/eyeson-node-layer.js",
   "module": "./src/eyeson-node-layer.mjs",
