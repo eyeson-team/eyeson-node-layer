@@ -1,6 +1,6 @@
 # eyeson-node-layer JavaScript Layer creation plugin
 
-A NodeJS plugin to define and create overlay or background layer to use with
+A Node.js plugin to define and create overlay or background layer to use with
 [eyeson-node](https://github.com/eyeson-team/eyeson-node).
 
 ## Installation
