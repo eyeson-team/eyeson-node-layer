@@ -89,14 +89,18 @@ layer.createConicGradient(startAngle, x, y): CanvasGradient
 layer.startShadow(blur, offsetX, offsetY, color): LayerObject
 // End shadow, continue without shadow
 layer.endShadow(): LayerObject
+// Set blur filter that is applied to all following elements
+layer.startBlur(radius): LayerObject
+// End blur filter, continue without blur
+layer.endBlur(): LayerObject
 // Add text
 layer.addText(text, font, color, x, y, maxWidth = null): LayerObject
 // Add multiline text that breaks at the given width and prevent overflow on given height
-layer.addMultilineText(text, font, color, x, y, width, height, lineHeight, textAlign = 'left'): LayerObject
+layer.addMultilineText(text, font, color, x, y, width, maxHeight = null, lineHeight, textAlign = 'left'): LayerObject
 // Load image from path, URL, or Buffer to use with addImage
 const image = await layer.loadImage(source)
 // Add an image. "source" can be local path, URL, Buffer, or Image. Set width and height to resize the image
-await layer.addImage(source, x, y, width = null, height = null): Promise<LayerObject>
+await layer.addImage(source, x, y, width = null, height = null, opacity = null): Promise<LayerObject>
 // Add filled rectangle with border radius
 layer.addRect(x, y, width, height, radius = 0, color): LayerObject
 // Add stroked rectangle with border radius
@@ -116,9 +120,9 @@ layer.addTextBox(text, font, fontColor, x, y, origin = 'top left', padding = 0, 
 // Add text with a stroked box
 layer.addTextBoxOutline(text, font, fontColor, x, y, origin = 'top left', padding = 0, maxWidth = null, radius = 0, lineWidth = 1, color): LayerObject
 // Add a filled box with multiline text that breaks at the given width and prevent overflow on given height
-layer.addMultilineTextBox(text, font, fontColor, x, y, width, height, padding = 0, lineHeight, radius = 0, color, textAlign = 'left'): LayerObject
+layer.addMultilineTextBox(text, font, fontColor, x, y, width, maxHeight = null, padding = 0, lineHeight, radius = 0, color, textAlign = 'left'): LayerObject
 // Add a stroked box with multiline text
-layer.addMultilineTextBoxOutline(text, font, fontColor, x, y, width, height, padding = 0, lineHeight, radius = 0, lineWidth = 1, color, textAlign = 'left'): LayerObject
+layer.addMultilineTextBoxOutline(text, font, fontColor, x, y, width, maxHeight = null, padding = 0, lineHeight, radius = 0, lineWidth = 1, color, textAlign = 'left'): LayerObject
 // Clear layer objects to re-use a clean canvas
 layer.clear()
 // Draw canvas and create the image buffer
@@ -166,6 +170,7 @@ $ npm run build
 
 ## Releases
 
+- 1.3.0 blur, multiline auto height, image opacity
 - 1.2.2 update type declarations
 - 1.2.1 createBuffer image type and quality
 - 1.2.0 add clear layer

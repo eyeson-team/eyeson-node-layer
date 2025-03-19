@@ -33,7 +33,7 @@ class EyesonLayer {
     /** @type {canvas.SKRSContext2D} */
     this._ctx = this._canvas.getContext('2d')
     this._ctx.textAlign = 'left'
-    this._ctx.textBaseline = 'top'
+    this._ctx.textBaseline = 'hanging'
   }
   /**
    * Measure text
@@ -112,6 +112,26 @@ class EyesonLayer {
     return entry
   }
   /**
+   * Set blur filter that is applied to all following elements
+   * @see https://developer.mozilla.org/en-US/docs/Web/CSS/filter-function/blur
+   * @param {number|string} [radius] - blur radius; default = 2
+   * @returns {{ type: 'start-blur', radius: number|string }}
+   */
+  startBlur(radius = 2) {
+    const entry = { type: 'start-blur', radius }
+    this._objects.push(entry)
+    return entry
+  }
+  /**
+   * End blur filter, continue without blur
+   * @returns {{ type: 'end-blur' }}
+   */
+  endBlur() {
+    const entry = { type: 'end-blur' }
+    this._objects.push(entry)
+    return entry
+  }
+  /**
    * Add text to canvas
    * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillText
    * @param {string} text
@@ -135,13 +155,13 @@ class EyesonLayer {
    * @param {number} x
    * @param {number} y
    * @param {number} width
-   * @param {number} height
+   * @param {number|null} maxHeight
    * @param {number} lineHeight
    * @param {TextAlign} [textAlign]
-   * @returns {{ type: 'multiline', text: string, font: string, color: string|CanvasGradient, x: number, y: number, width: number, height: number, lineHeight: number, textAlign: TextAlign }}
+   * @returns {{ type: 'multiline', text: string, font: string, color: string|CanvasGradient, x: number, y: number, width: number, maxHeight: number|null, lineHeight: number, textAlign: TextAlign }}
    */
-  addMultilineText(text, font, color, x, y, width, height, lineHeight, textAlign = 'left') {
-    const entry = { type: 'multiline', text, font, color, x, y, width, height, lineHeight, textAlign }
+  addMultilineText(text, font, color, x, y, width, maxHeight, lineHeight, textAlign = 'left') {
+    const entry = { type: 'multiline', text, font, color, x, y, width, maxHeight, lineHeight, textAlign }
     this._objects.push(entry)
     return entry
   }
@@ -152,11 +172,12 @@ class EyesonLayer {
    * @param {number} y
    * @param {number|null} [width] - width of image if null
    * @param {number|null} [height] - height of image if null
-   * @returns {Promise<{ type: 'image', image: canvas.Image, x: number, y: number, width: number|null, height: number|null }>}
+   * @param {number|null} [opacity] - opacity
+   * @returns {Promise<{ type: 'image', image: canvas.Image, x: number, y: number, width: number|null, height: number|null, opacity: number|null }>}
    */
-  async addImage(source, x, y, width = null, height = null) {
+  async addImage(source, x, y, width = null, height = null, opacity = null) {
     const image = await canvas.loadImage(source)
-    const entry = { type: 'image', image, x, y, width, height }
+    const entry = { type: 'image', image, x, y, width, height, opacity }
     this._objects.push(entry)
     return entry
   }
@@ -315,16 +336,16 @@ class EyesonLayer {
    * @param {number} x
    * @param {number} y
    * @param {number} width
-   * @param {number} height
+   * @param {number|null} maxHeight
    * @param {number|Array<number>} padding - One number for all sides or array of numbers, supports 1, 2, 3, or 4 value notation. default 0
    * @param {number} lineHeight
    * @param {number} radius - default 0
    * @param {string|CanvasGradient} color - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
    * @param {TextAlign} [textAlign] - default "left"
-   * @returns {{ type: 'multiline-box', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, width: number, height: number, padding: number|Array<number>, lineHeight: number, radius: number, color: string|CanvasGradient, textAlign: TextAlign }}
+   * @returns {{ type: 'multiline-box', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, width: number, maxHeight: number|null, padding: number|Array<number>, lineHeight: number, radius: number, color: string|CanvasGradient, textAlign: TextAlign }}
    */
-  addMultilineTextBox(text, font, fontColor, x, y, width, height, padding = 0, lineHeight, radius = 0, color, textAlign = 'left') {
-    const entry = { type: 'multiline-box', text, font, fontColor, x, y, width, height, padding, lineHeight, radius, color, textAlign }
+  addMultilineTextBox(text, font, fontColor, x, y, width, maxHeight, padding = 0, lineHeight, radius = 0, color, textAlign = 'left') {
+    const entry = { type: 'multiline-box', text, font, fontColor, x, y, width, maxHeight, padding, lineHeight, radius, color, textAlign }
     this._objects.push(entry)
     return entry
   }
@@ -336,17 +357,17 @@ class EyesonLayer {
    * @param {number} x
    * @param {number} y
    * @param {number} width
-   * @param {number} height
+   * @param {number|null} maxHeight
    * @param {number|Array<number>} padding - One number for all sides or array of numbers, supports 1, 2, 3, or 4 value notation. default 0
    * @param {number} lineHeight
    * @param {number} radius - default 0
    * @param {number} lineWidth - default 1
    * @param {string|CanvasGradient} color - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
    * @param {TextAlign} [textAlign] - default "left"
-   * @returns {{ type: 'multiline-box-outline', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, width: number, height: number, padding: number|Array<number>, lineHeight: number, radius: number, lineWidth: number, color: string|CanvasGradient, textAlign: TextAlign }}
+   * @returns {{ type: 'multiline-box-outline', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, width: number, maxHeight: number|null, padding: number|Array<number>, lineHeight: number, radius: number, lineWidth: number, color: string|CanvasGradient, textAlign: TextAlign }}
    */
-  addMultilineTextBoxOutline(text, font, fontColor, x, y, width, height, padding = 0, lineHeight, radius = 0, lineWidth = 1, color, textAlign = 'left') {
-    const entry = { type: 'multiline-box-outline', text, font, fontColor, x, y, width, height, padding, lineHeight, radius, lineWidth, color, textAlign }
+  addMultilineTextBoxOutline(text, font, fontColor, x, y, width, maxHeight, padding = 0, lineHeight, radius = 0, lineWidth = 1, color, textAlign = 'left') {
+    const entry = { type: 'multiline-box-outline', text, font, fontColor, x, y, width, maxHeight, padding, lineHeight, radius, lineWidth, color, textAlign }
     this._objects.push(entry)
     return entry
   }
@@ -354,7 +375,7 @@ class EyesonLayer {
    * Clear layer objects to re-use a clean canvas
    */
   clear() {
-    this._objects.length = 0;
+    this._objects.length = 0
   }
   /**
    * Draw on canvas and return Buffer
@@ -377,7 +398,12 @@ class EyesonLayer {
         _ctx.fillStyle = entry.color
         _ctx.textAlign = entry.textAlign
         const xText = parseTextAlign(entry.textAlign, entry.x, entry.width)
-        canvasMultilineText(_ctx, entry.text, xText, entry.y, entry.width, entry.height, entry.lineHeight)
+        let height = entry.maxHeight
+        if (entry.maxHeight === null) {
+          const lineCount = countLines(_ctx, entry.text, entry.width)
+          height = lineCount * entry.lineHeight
+        }
+        canvasMultilineText(_ctx, entry.text, xText, entry.y, entry.width, height, entry.lineHeight)
         _ctx.textAlign = 'left'
       }
       else if (type === 'multiline-box') {
@@ -386,15 +412,20 @@ class EyesonLayer {
         _ctx.textAlign = entry.textAlign
         const [paddingTop, paddingRight, paddingBottom, paddingLeft] = parsePadding(entry.padding)
         const xText = parseTextAlign(entry.textAlign, entry.x, entry.width - paddingLeft - paddingRight)
+        let height = entry.maxHeight
+        if (entry.maxHeight === null) {
+          const lineCount = countLines(_ctx, entry.text, entry.width - paddingLeft - paddingRight)
+          height = lineCount * entry.lineHeight + paddingTop + paddingBottom
+        }
         if (entry.radius > 0) {
           _ctx.beginPath()
-          _ctx.roundRect(entry.x, entry.y, entry.width, entry.height, entry.radius)
+          _ctx.roundRect(entry.x, entry.y, entry.width, height, entry.radius)
           _ctx.fill()
         } else {
-          _ctx.fillRect(entry.x, entry.y, entry.width, entry.height)
+          _ctx.fillRect(entry.x, entry.y, entry.width, height)
         }
         _ctx.fillStyle = entry.fontColor
-        canvasMultilineText(_ctx, entry.text, xText + paddingLeft, entry.y + paddingTop, entry.width - paddingLeft - paddingRight, entry.height - paddingTop - paddingBottom, entry.lineHeight)
+        canvasMultilineText(_ctx, entry.text, xText + paddingLeft, entry.y + paddingTop, entry.width - paddingLeft - paddingRight, height - paddingTop - paddingBottom, entry.lineHeight)
         _ctx.textAlign = 'left'
       }
       else if (type === 'multiline-box-outline') {
@@ -404,15 +435,20 @@ class EyesonLayer {
         _ctx.textAlign = entry.textAlign
         const [paddingTop, paddingRight, paddingBottom, paddingLeft] = parsePadding(entry.padding)
         const xText = parseTextAlign(entry.textAlign, entry.x, entry.width - paddingLeft - paddingRight)
+        let height = entry.maxHeight
+        if (entry.maxHeight === null) {
+          const lineCount = countLines(_ctx, entry.text, entry.width - paddingLeft - paddingRight)
+          height = lineCount * entry.lineHeight + paddingTop + paddingBottom
+        }
         if (entry.radius > 0) {
           _ctx.beginPath()
-          _ctx.roundRect(entry.x, entry.y, entry.width, entry.height, entry.radius)
+          _ctx.roundRect(entry.x, entry.y, entry.width, height, entry.radius)
           _ctx.stroke()
         } else {
-          _ctx.strokeRect(entry.x, entry.y, entry.width, entry.height)
+          _ctx.strokeRect(entry.x, entry.y, entry.width, height)
         }
         _ctx.fillStyle = entry.fontColor
-        canvasMultilineText(_ctx, entry.text, xText + paddingLeft, entry.y + paddingTop, entry.width - paddingLeft - paddingRight, entry.height - paddingTop - paddingBottom, entry.lineHeight)
+        canvasMultilineText(_ctx, entry.text, xText + paddingLeft, entry.y + paddingTop, entry.width - paddingLeft - paddingRight, height - paddingTop - paddingBottom, entry.lineHeight)
         _ctx.textAlign = 'left'
       }
       else if (type === 'rect') {
@@ -474,7 +510,14 @@ class EyesonLayer {
         }
       }
       else if (type === 'image') {
+        const hasOpacity = typeof entry.opacity === 'number'
+        if (hasOpacity) {
+          _ctx.globalAlpha = entry.opacity
+        }
         _ctx.drawImage(entry.image, entry.x, entry.y, entry.width, entry.height)
+        if (hasOpacity) {
+          _ctx.globalAlpha = 1.0
+        }
       }
       else if (type === 'circle') {
         _ctx.fillStyle = entry.color
@@ -532,6 +575,12 @@ class EyesonLayer {
         _ctx.shadowOffsetX = 0
         _ctx.shadowOffsetY = 0
       }
+      else if (type === 'start-blur') {
+        _ctx.filter = `blur(${typeof entry.radius === 'number' ? `${entry.radius}px` : entry.radius})`
+      }
+      else if (type === 'end-blur') {
+        _ctx.filter = 'none'
+      }
     })
     return _canvas.toBuffer(type, quality)
   }
@@ -587,6 +636,30 @@ const canvasMultilineText = (ctx, text, x, y, maxWidth, maxHeight, lineHeight, b
       return
     }
   }
+}
+
+const countLines = (ctx, text, maxWidth) => {
+  let count = 0
+  const lines = text.split(/\r?\n/)
+  for (let line of lines) {
+    if (line === '') {
+      continue
+    }
+    const words = line.split(' ')
+    let newLine = ''
+    for (let i = 0, n = words.length; i < n; i++) {
+      let testLine = newLine + words[i] + ' '
+      const metrics = ctx.measureText(testLine)
+      if (metrics.width > maxWidth && i > 0) {
+        count++
+        newLine = words[i] + ' '
+      } else {
+        newLine = testLine
+      }
+    }
+    count++
+  }
+  return count
 }
 
 const parsePadding = padding => {

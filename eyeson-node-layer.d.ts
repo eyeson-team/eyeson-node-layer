@@ -106,6 +106,23 @@ declare module "eyeson-node-layer" {
             type: "end-shadow";
         };
         /**
+         * Set blur filter that is applied to all following elements
+         * @see https://developer.mozilla.org/en-US/docs/Web/CSS/filter-function/blur
+         * @param {number|string} [radius] - blur radius; default = 2
+         * @returns {{ type: 'start-blur', radius: number|string }}
+         */
+        startBlur(radius?: number | string): {
+            type: "start-blur";
+            radius: number | string;
+        };
+        /**
+         * End blur filter, continue without blur
+         * @returns {{ type: 'end-blur' }}
+         */
+        endBlur(): {
+            type: "end-blur";
+        };
+        /**
          * Add text to canvas
          * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillText
          * @param {string} text
@@ -133,12 +150,12 @@ declare module "eyeson-node-layer" {
          * @param {number} x
          * @param {number} y
          * @param {number} width
-         * @param {number} height
+         * @param {number|null} maxHeight
          * @param {number} lineHeight
          * @param {TextAlign} [textAlign]
-         * @returns {{ type: 'multiline', text: string, font: string, color: string|CanvasGradient, x: number, y: number, width: number, height: number, lineHeight: number, textAlign: TextAlign }}
+         * @returns {{ type: 'multiline', text: string, font: string, color: string|CanvasGradient, x: number, y: number, width: number, maxHeight: number|null, lineHeight: number, textAlign: TextAlign }}
          */
-        addMultilineText(text: string, font: string, color: string | CanvasGradient, x: number, y: number, width: number, height: number, lineHeight: number, textAlign?: TextAlign): {
+        addMultilineText(text: string, font: string, color: string | CanvasGradient, x: number, y: number, width: number, maxHeight: number | null, lineHeight: number, textAlign?: TextAlign): {
             type: "multiline";
             text: string;
             font: string;
@@ -146,7 +163,7 @@ declare module "eyeson-node-layer" {
             x: number;
             y: number;
             width: number;
-            height: number;
+            maxHeight: number | null;
             lineHeight: number;
             textAlign: TextAlign;
         };
@@ -157,15 +174,17 @@ declare module "eyeson-node-layer" {
          * @param {number} y
          * @param {number|null} [width] - width of image if null
          * @param {number|null} [height] - height of image if null
-         * @returns {Promise<{ type: 'image', image: canvas.Image, x: number, y: number, width: number|null, height: number|null }>}
+         * @param {number|null} [opacity] - opacity
+         * @returns {Promise<{ type: 'image', image: canvas.Image, x: number, y: number, width: number|null, height: number|null, opacity: number|null }>}
          */
-        addImage(source: string | URL | Buffer | ArrayBufferLike | Uint8Array | canvas.Image | import("stream").Readable, x: number, y: number, width?: number | null, height?: number | null): Promise<{
+        addImage(source: string | URL | Buffer | ArrayBufferLike | Uint8Array | canvas.Image | import("stream").Readable, x: number, y: number, width?: number | null, height?: number | null, opacity?: number | null): Promise<{
             type: "image";
             image: canvas.Image;
             x: number;
             y: number;
             width: number | null;
             height: number | null;
+            opacity: number | null;
         }>;
         /**
          * Add a filled rectangle to canvas
@@ -346,15 +365,15 @@ declare module "eyeson-node-layer" {
          * @param {number} x
          * @param {number} y
          * @param {number} width
-         * @param {number} height
+         * @param {number|null} maxHeight
          * @param {number|Array<number>} padding - One number for all sides or array of numbers, supports 1, 2, 3, or 4 value notation. default 0
          * @param {number} lineHeight
          * @param {number} radius - default 0
          * @param {string|CanvasGradient} color - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
          * @param {TextAlign} [textAlign] - default "left"
-         * @returns {{ type: 'multiline-box', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, width: number, height: number, padding: number|Array<number>, lineHeight: number, radius: number, color: string|CanvasGradient, textAlign: TextAlign }}
+         * @returns {{ type: 'multiline-box', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, width: number, maxHeight: number|null, padding: number|Array<number>, lineHeight: number, radius: number, color: string|CanvasGradient, textAlign: TextAlign }}
          */
-        addMultilineTextBox(text: string, font: string, fontColor: string | CanvasGradient, x: number, y: number, width: number, height: number, padding: number | Array<number>, lineHeight: number, radius: number, color: string | CanvasGradient, textAlign?: TextAlign): {
+        addMultilineTextBox(text: string, font: string, fontColor: string | CanvasGradient, x: number, y: number, width: number, maxHeight: number | null, padding: number | Array<number>, lineHeight: number, radius: number, color: string | CanvasGradient, textAlign?: TextAlign): {
             type: "multiline-box";
             text: string;
             font: string;
@@ -362,7 +381,7 @@ declare module "eyeson-node-layer" {
             x: number;
             y: number;
             width: number;
-            height: number;
+            maxHeight: number | null;
             padding: number | Array<number>;
             lineHeight: number;
             radius: number;
@@ -377,16 +396,16 @@ declare module "eyeson-node-layer" {
          * @param {number} x
          * @param {number} y
          * @param {number} width
-         * @param {number} height
+         * @param {number|null} maxHeight
          * @param {number|Array<number>} padding - One number for all sides or array of numbers, supports 1, 2, 3, or 4 value notation. default 0
          * @param {number} lineHeight
          * @param {number} radius - default 0
          * @param {number} lineWidth - default 1
          * @param {string|CanvasGradient} color - CSS color value, e.g. '#000' or 'black' or with alpha 'rgb(0 0 0 / 10%)'
          * @param {TextAlign} [textAlign] - default "left"
-         * @returns {{ type: 'multiline-box-outline', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, width: number, height: number, padding: number|Array<number>, lineHeight: number, radius: number, lineWidth: number, color: string|CanvasGradient, textAlign: TextAlign }}
+         * @returns {{ type: 'multiline-box-outline', text: string, font: string, fontColor: string|CanvasGradient, x: number, y: number, width: number, maxHeight: number|null, padding: number|Array<number>, lineHeight: number, radius: number, lineWidth: number, color: string|CanvasGradient, textAlign: TextAlign }}
          */
-        addMultilineTextBoxOutline(text: string, font: string, fontColor: string | CanvasGradient, x: number, y: number, width: number, height: number, padding: number | Array<number>, lineHeight: number, radius: number, lineWidth: number, color: string | CanvasGradient, textAlign?: TextAlign): {
+        addMultilineTextBoxOutline(text: string, font: string, fontColor: string | CanvasGradient, x: number, y: number, width: number, maxHeight: number | null, padding: number | Array<number>, lineHeight: number, radius: number, lineWidth: number, color: string | CanvasGradient, textAlign?: TextAlign): {
             type: "multiline-box-outline";
             text: string;
             font: string;
@@ -394,7 +413,7 @@ declare module "eyeson-node-layer" {
             x: number;
             y: number;
             width: number;
-            height: number;
+            maxHeight: number | null;
             padding: number | Array<number>;
             lineHeight: number;
             radius: number;
