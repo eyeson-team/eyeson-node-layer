@@ -1,5 +1,5 @@
-const Eyeson = require('eyeson-node')
-const EyesonLayer = require('../src/eyeson-node-layer')
+const Eyeson = require('@eyeson/node')
+const EyesonLayer = require('@eyeson/node-layer')
 
 const eyeson = new Eyeson({ apiKey: process.env.API_KEY })
 

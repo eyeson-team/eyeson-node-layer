@@ -1,20 +1,20 @@
-# eyeson-node-layer JavaScript Layer creation plugin
+# @eyeson/node-layer JavaScript Layer creation plugin
 
 A Node.js plugin to define and create overlay or background layer to use with
-[eyeson-node](https://github.com/eyeson-team/eyeson-node).
+[@eyeson/node](https://github.com/eyeson-team/eyeson-node).
 
 ## Installation
 
-Add eyeson-node-layer to your node project using `npm` or `yarn`.
+Add @eyeson/node-layer to your node project using `npm` or `yarn`.
 
 ```sh
-$ npm install --save eyeson-node eyeson-node-layer
+$ npm install --save @eyeson/node @eyeson/node-layer
 # or
-$ yarn add eyeson-node eyeson-node-layer
+$ yarn add @eyeson/node @eyeson/node-layer
 ```
 
 > [!NOTE]
-> Minimum required version of eyeson-node is 1.2.0!
+> Minimum required version of @eyeson/node is 1.2.0!
 
 ## Usage
 
@@ -22,8 +22,8 @@ Get an API-KEY from
 [developers.eyeson.team](https://developers.eyeson.team).
 
 ```js
-import Eyeson from 'eyeson-node'
-import EyesonLayer from 'eyeson-node-layer'
+import Eyeson from '@eyeson/node'
+import EyesonLayer from '@eyeson/node-layer'
 
 const eyeson = new Eyeson({ apiKey: '< api-key >' }) // configure to use your api key
 const layer = new EyesonLayer()
@@ -38,8 +38,8 @@ You can create and apply foreground or background layers by simply programming
 them! It is based on the node canvas plugin from https://github.com/Brooooooklyn/canvas.
 
 ```js
-import Eyeson from 'eyeson-node'
-import EyesonLayer from 'eyeson-node-layer'
+import Eyeson from '@eyeson/node'
+import EyesonLayer from '@eyeson/node-layer'
 
 const eyeson = new Eyeson({ apiKey: '< api-key >' }) // configure to use your api key
 
@@ -66,7 +66,7 @@ await user.sendLayer(overlay)
 Save the resulting image as preview:
 
 ```js
-import EyesonLayer from 'eyeson-node-layer'
+import EyesonLayer from '@eyeson/node-layer'
 
 const layer = new EyesonLayer()
 layer.addText(...)
@@ -170,6 +170,7 @@ $ npm run build
 
 ## Releases
 
+- 1.3.1 move to @eyeson
 - 1.3.0 blur, multiline auto height, image opacity
 - 1.2.2 update type declarations
 - 1.2.1 createBuffer image type and quality
